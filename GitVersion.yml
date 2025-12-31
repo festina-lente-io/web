@@ -1,0 +1,29 @@
+# GitVersion Configuration for Festina Lente Web
+# Semantic versioning for the website
+
+# Mainline mode: Trunk-based development approach
+mode: Mainline
+
+# Branch-specific configuration
+branches:
+  main:
+    # Main branch produces production releases (no tag prefix)
+    tag: ''
+    # Default increment is patch (1.0.0 → 1.0.1)
+    increment: Patch
+    
+  feature:
+    # Feature branches get a pre-release tag
+    tag: 'feature'
+    # Feature branches increment minor version
+    increment: Minor
+    is-mainline: false
+    
+  hotfix:
+    # Hotfix branches for production issues
+    tag: 'hotfix'
+    increment: Patch
+    is-mainline: false
+
+# Ignore SHA commits for cleaner version tags
+commit-message-incrementing: Enabled

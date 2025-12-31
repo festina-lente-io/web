@@ -1,0 +1,55 @@
+# Hugo Configuration for Festina Lente Project Showcase
+# Base configuration for Hugo Extended with Hextra theme
+
+baseURL = "https://www.festina-lente.io/"
+title = "Festina Lente"
+languageCode = "en-us"
+# Site theme (loaded from themes/ directory as git submodule)
+theme = "hextra"
+
+# Enable Git info for lastmod dates
+enableGitInfo = true
+
+# Generate robots.txt
+enableRobotsTXT = true
+
+# Site parameters
+[params]
+  description = "Open source projects for developers"
+  author = "Festina Lente"
+
+# Navigation menu configuration
+[params.navbar]
+  displayLogo = true
+  [params.navbar.logo]
+    path = "images/logo-light.png"
+    dark = "images/logo-dark.png"
+    width = 60
+    height = 60
+
+  [[params.navbar.menu]]
+    name = "Home"
+    url = "/"
+    weight = 1
+    
+  [[params.navbar.menu]]
+    name = "Projects"
+    url = "/projects/"
+    weight = 2
+
+# Footer configuration
+[params.footer]
+  copyright = "© 2025 Festina Lente. Open source projects."
+
+# Markdown rendering configuration
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      # Allow raw HTML in markdown (required for some content)
+      unsafe = true
+
+# Hugo version requirements
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.112.0"

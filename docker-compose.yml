@@ -1,0 +1,23 @@
+# Docker Compose configuration for Hugo local development
+# Usage:
+#   Build: docker-compose build
+#   Run: docker-compose up
+#   Stop: docker-compose down
+
+services:
+  hugo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: festina-lente-hugo
+    ports:
+      - "1313:1313"  # Map container port 1313 to host port 1313
+    volumes:
+      - .:/src  # Mount current directory to /src in container
+      - /src/public  # Anonymous volume for public/ to avoid permission issues
+      - /src/resources  # Anonymous volume for resources/ to avoid permission issues
+    environment:
+      - HUGO_ENVIRONMENT=development
+    restart: unless-stopped
+    stdin_open: true  # Keep container running with interactive mode
+    tty: true

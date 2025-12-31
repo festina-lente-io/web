@@ -1,14 +1,16 @@
 # Hugo build outputs
 public/
 resources/
+
+# Hugo lock file
 .hugo_build.lock
 
 # Node modules (if using npm for additional tooling)
 node_modules/
 
-# Test outputs
-htmltest/
-.htmltest/
+# Git files
+.git/
+.gitignore
 
 # IDE files
 .vscode/
@@ -24,3 +26,13 @@ Thumbs.db
 # Environment files
 .env
 .env.local
+
+# Test outputs
+htmltest/
+.htmltest.yml
+
+# Documentation (not needed in build)
+specs/
+README.md
+LICENSE
+CONTRIBUTING.md

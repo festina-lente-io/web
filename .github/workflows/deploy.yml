@@ -1,0 +1,69 @@
+# GitHub Actions workflow for deploying Hugo site to GitHub Pages
+name: Deploy Hugo Site
+
+# Trigger on push to main or pull requests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # Allow manual trigger
+
+# Environment variables
+env:
+  HUGO_VERSION: "0.120.0"
+
+# Job definitions
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for gh-pages deployment
+    
+    steps:
+      # Step 1: Checkout code with full history for GitVersion
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetch Hugo themes (if git submodule)
+          fetch-depth: 0    # Required for GitVersion to work correctly
+      
+      # Step 2: Setup Hugo Extended (required for SCSS processing in Hextra theme)
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true  # Required for Hextra theme SCSS compilation
+      
+      # Step 3: Install GitVersion for semantic versioning
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.10.2
+        with:
+          versionSpec: '5.x'
+      
+      # Step 4: Calculate semantic version from git history
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.10.2
+      
+      # Step 5: Build Hugo site with minification and version injection
+      - name: Build Hugo Site
+        env:
+          HUGO_VERSION_TAG: ${{ steps.gitversion.outputs.semVer }}
+        run: hugo --minify
+      
+      # Step 6: Install and run htmltest for HTML validation and link checking
+      - name: Test HTML
+        run: |
+          curl -s https://htmltest.wjdp.uk | bash
+          ./bin/htmltest
+      
+      # Step 7: Deploy to GitHub Pages (only on main branch push)
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          cname: www.festina-lente.io
+          force_orphan: true  # Clean gh-pages branch history for smaller repo

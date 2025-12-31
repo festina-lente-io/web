@@ -1,0 +1,28 @@
+# htmltest configuration
+# Validates HTML output and checks for broken links
+
+DirectoryPath: "public"
+CheckDoctype: true
+CheckExternal: true
+CheckFavicon: true
+CheckGeneric: true
+CheckImg: true
+CheckInternal: true
+CheckMailto: true
+CheckMeta: true
+CheckScripts: true
+
+# Ignore external links timeout (some external sites may be slow)
+ExternalTimeout: 30
+
+# Ignore patterns (if needed)
+IgnoreURLs:
+  - "^https://github.com/festina-lente-io/.*/issues"
+  - "^https://github.com/festina-lente-io/.*/discussions"
+
+# Log level: 0=silent, 1=errors, 2=warnings, 3=info
+LogLevel: 2
+
+# Fail on warnings
+IgnoreEmptyHref: false
+IgnoreInternalEmptyHash: false

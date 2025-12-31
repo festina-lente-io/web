@@ -1,18 +1,19 @@
 <!--
   SYNC IMPACT REPORT
   ==================
-  Version Change: Template → 1.0.0
-  Ratification: 2025-12-24
+  Version Change: 1.0.0 → 2.0.0
+  Ratification: 2025-12-25
   
   Modified Principles:
-  - NEW: I. Content-First Development
-  - NEW: II. Configuration as Code
-  - NEW: III. Performance and Accessibility (NON-NEGOTIABLE)
-  - NEW: IV. Version Control for Content
+  - UPDATED: All principles made technology-agnostic (Jekyll → SSG)
+  - UPDATED: Configuration references generic (not _config.yml specific)
+  - UPDATED: Theme references generic (not Minimal Mistakes specific)
+  - REMOVED: Jekyll-specific implementation details
+  - ADDED: Generic static site generator terminology
   
-  Added Sections:
-  - Jekyll & Minimal Mistakes Standards
-  - GitHub Pages Deployment
+  Technology Scope:
+  - Applies to: Jekyll, Hugo, 11ty, Astro, Next.js SSG, or any static generator
+  - Implementation details defined per-project in plan.md
   
   Templates Status:
   ✅ plan-template.md - Verified compatible
@@ -39,18 +40,24 @@ Content is the primary deliverable; all technical decisions serve content delive
 
 **Rationale**: Static sites prioritize content over dynamic features. Treating content as structured data ensures consistency, enables automation, and prevents technical debt in the content layer.
 
+**Implementation Notes**:
+- Front matter format: YAML, TOML, or JSON (project choice)
+- Content organization: Collections, sections, or directories (SSG-dependent)
+- Schema documentation: In data-model.md or equivalent
+
 ### II. Configuration as Code
 
 All site configuration, theme customization, and build settings MUST be version-controlled and documented.
 
 **Rules**:
 
-- `_config.yml` changes MUST include inline comments explaining intent
-- Theme configuration MUST live in `_config.yml` (not scattered across files)
+- Configuration file changes MUST include inline comments explaining intent
+- Theme configuration MUST be centralized (not scattered across multiple files)
 - Custom variables MUST be documented in project README or dedicated configuration doc
 - Local overrides (for development) MUST be git-ignored and documented
+- Build configuration (dependencies, versions) MUST be explicitly declared
 
-**Rationale**: Jekyll configuration drives site behavior, appearance, and build process. Centralizing and documenting configuration prevents "mystery settings" and makes the site reproducible across environments.
+**Rationale**: Site configuration drives behavior, appearance, and build process. Centralizing and documenting configuration prevents "mystery settings" and makes the site reproducible across environments and team members.
 
 ### III. Performance and Accessibility (NON-NEGOTIABLE)
 
@@ -59,30 +66,42 @@ Every page MUST meet baseline performance and accessibility standards before dep
 **Rules**:
 
 - Lighthouse scores MUST achieve: Performance ≥90, Accessibility ≥95, Best Practices ≥90, SEO ≥95
-- Images MUST be optimized and include descriptive alt text
+- Images MUST bStatic hosting serves content globally, but poor performance or accessibility excludes users. These are foundational requirements, not negotiable enhancements.
+
+**Implementation Notes**:
+- Use native SSG optimization features (image processing, minification)
+- Test with Lighthouse, WebPageTest, or equivalent tools
+- Verify WCAG 2.1 AA compliance minimum
 - Responsive design MUST be tested on mobile, tablet, and desktop viewports
 - Semantic HTML and ARIA labels REQUIRED where appropriate
-- Links and navigation MUST be keyboard-accessible
-
-**Rationale**: GitHub Pages serves static content globally, but poor performance or accessibility excludes users. These are foundational requirements, not negotiable enhancements.
-
-### IV. Version Control for Content
-
-Content changes follow the same rigor as code changes: review, commit messages, and traceability.
-
-**Rules**:
-
-- Content commits MUST have descriptive messages (e.g., "Add post: Introduction to Jekyll Collections" not "Update file")
-- Draft content MUST use Jekyll's `published: false` front matter or live in `_drafts/`
+- Links and navigation MUST be keyboard-accessibleData Schemas" not "Update file")
+- Draft content MUST use SSG draft mechanism (`draft: true` front matter or draft directory)
 - Breaking content structure changes (e.g., renaming categories) REQUIRE migration plan and documentation
 - Content deleted from main branch MUST be recoverable via git history (no force-push without justification)
 
 **Rationale**: Content is the product. Version control ensures accountability, enables rollback, and allows collaboration without overwriting work.
 
-## Jekyll & Minimal Mistakes Standards
+**IStatic Site Generator Standards
 
-**Technology Stack**:
+**Technology Stack** (defined per-project in plan.md):
 
+- **Static Site Generator**: Hugo, Jekyll, 11ty, Astro, Next.js SSG, or equivalent
+- **Theme/Template**: Project-specific choice documented in plan.md
+- **Hosting**: GitHub Pages, Netlify, Vercel, CloudFlare Pages, or equivalent static host
+- **CI/CD**: GitHub Actions, GitLab CI, or equivalent automation
+
+**Required Practices**:
+
+- Theme updates MUST be tested locally before deploying to production
+- Custom layouts/templates MUST follow chosen theme/SSG conventions
+- Build dependencies MUST be explicitly versioned and documented
+- Template syntax MUST be validated locally before commit
+- Build output MUST be git-ignored (not committed to main branch)
+
+**File Organization** (SSG-dependent, document in README):
+
+- Content files in documented content directory structure
+- Static assets in dedicated static/public directory
 - **Jekyll**: Static site generator (Ruby-based)
 - **Minimal Mistakes**: Jekyll theme for layout, styling, and components
 - **GitHub Pages**: Hosting and automated deployment via GitHub Actions or Pages build service
@@ -114,21 +133,21 @@ Content changes follow the same rigor as code changes: review, commit messages, 
 
 - Main branch (`main`) MUST always be production-ready
 - Feature branches for new content/features → PR → review → merge
-- GitHub Actions or Pages build service handles build and deployment automatically
+- CI/CD pipeline handles build and deployment automatically
 - Build failures MUST be addressed before merge (no bypassing CI)
 
 **Pre-Deployment Checklist**:
 
-- [ ] Local Jekyll build succeeds (`bundle exec jekyll build`)
-- [ ] Local preview matches expected output (`bundle exec jekyll serve`)
+- [ ] Local build succeeds (SSG build command)
+- [ ] Local preview matches expected output (SSG dev server)
 - [ ] No broken links (verified with link checker)
 - [ ] Images optimized and properly referenced
-- [ ] Front matter valid and complete
+- [ ] Front matter/metadata valid and complete
 - [ ] Configuration changes tested locally
 
 **Rollback Procedure**:
 
-- If production build breaks: revert commit and redeploy
+- If production build breaks: revert commit and redeploy via CI/CD
 - Content errors: edit and push fix (fast-forward)
 - Major issues: revert to last known good commit
 
